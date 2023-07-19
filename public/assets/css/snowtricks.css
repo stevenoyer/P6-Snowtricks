@@ -1,0 +1,64 @@
+html, body {
+    scroll-behavior: smooth;
+}
+
+.uk-button-success {
+    background-color: #32d296;
+    color: #fff;
+    border: 1px solid transparent;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lilita One', cursive;
+}
+
+h1 {
+    letter-spacing: 5px;
+}
+
+header .scroll-next {
+    position: absolute;
+    bottom: 30px;
+}
+
+header .scroll-next {
+    background: rgba(255, 255, 255, .8);
+    border-radius: 50%;
+}
+
+header .scroll-next a {
+    animation: bounce 2s ease infinite;
+}
+
+header .scroll-next svg {
+    width: 50px !important;
+    height: 50px !important;
+}
+
+header .scroll-next polyline {
+    stroke-width: 2;
+    stroke: #000 !important;
+}
+
+.logo-nav {
+    transition: all .4s;
+}
+
+.logo-nav:hover {
+    transition: all .4s;
+    transform: rotate(360deg) scale(1.1);
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+
+	40% {
+        transform: translateY(-5px);
+    }
+
+	60% {
+        transform: translateY(-2.5px);
+    }
+}
