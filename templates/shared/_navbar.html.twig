@@ -12,8 +12,8 @@
 
                 <ul class="uk-navbar-nav">
                     <li class="uk-active"><a href="{{ path('home') }}">Home</a></li>
-                    <li><a href="#">Tricks</a></li>
                     {% if app.user %}
+                        <li><a href="#">Tricks</a></li>
                         <li><a href="#">My profile</a></li>
                         <li>
                             <a href="#logout">
@@ -21,9 +21,9 @@
                             </a>
                         </li>
                     {% else %}
-                        <li><a href="#">Sign in</a></li>
+                        <li><a href="{{ path('security_login') }}">Sign in</a></li>
                         <li>
-                            <a href="#logout">
+                            <a href="{{ path('security_register') }}">
                                 <button class="uk-button uk-button-primary uk-button-small">Sign up</button>
                             </a>
                         </li>

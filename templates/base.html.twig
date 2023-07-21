@@ -22,17 +22,19 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
     </head>
-    <body>
 
+    <body>
         <header>
             {% include "shared/_navbar.html.twig" %}
 
-            <div class="uk-position-relative uk-height-large uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light" data-src="{{ asset('assets/img/snowtricks_header.jpeg') }}" uk-height-viewport="offset-bottom: 5" uk-img>
-                <h1 class="uk-text-uppercase">SnowTricks</h1>
+            <div class="uk-position-relative {% if app.request.attributes.get('_route') == 'home' %} uk-height-large {% endif %} uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light" data-src="{{ asset('assets/img/snowtricks_header.jpeg') }}" uk-height-viewport="{% if app.request.attributes.get('_route') == 'home' %}offset-bottom: 5{% else %}offset-bottom: 70{% endif %}" uk-img>
+                {% block h1 %}{% endblock %}
 
-                <div class="scroll-next">
-                    <a href="#home" class="uk-icon-dark" uk-icon="chevron-down"></a>
-                </div>
+                {% if app.request.attributes.get('_route') == 'home' %}
+                    <div class="scroll-next">
+                        <a href="#home" class="uk-icon-dark" uk-icon="chevron-down"></a>
+                    </div>
+                {% endif %}
             </div>
         </header>
 
