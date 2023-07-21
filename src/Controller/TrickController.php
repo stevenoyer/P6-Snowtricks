@@ -8,6 +8,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
+
+    #[Route('/trick/create', name: 'trick_create')]
+    public function create(): Response
+    {
+        // To do
+        return $this->render('trick/create.html.twig', [
+            
+        ]);
+    }
+
     #[Route('/trick/{slug}', name: 'trick_show')]
     public function show($slug): Response
     {
@@ -25,13 +35,5 @@ class TrickController extends AbstractController
             
         ]);
     }
-
-    #[Route('/trick/create', name: 'trick_create')]
-    public function create(): Response
-    {
-        // To do
-        return $this->render('trick/create.html.twig', [
-            
-        ]);
-    }
+    
 }

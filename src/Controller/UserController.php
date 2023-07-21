@@ -12,7 +12,7 @@ class UserController extends AbstractController
     public function show(): Response
     {
         // To do
-        return $this->render('user/profile.html.twig', [
+        return $this->render('user/show.html.twig', [
             
         ]);
     }
