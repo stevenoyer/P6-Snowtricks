@@ -27,7 +27,7 @@
         <header>
             {% include "shared/_navbar.html.twig" %}
 
-            <div class="uk-position-relative {% if app.request.attributes.get('_route') == 'home' %} uk-height-large {% endif %} uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light" data-src="{{ asset('assets/img/snowtricks_header.jpeg') }}" uk-height-viewport="{% if app.request.attributes.get('_route') == 'home' %}offset-bottom: 5{% else %}offset-bottom: 70{% endif %}" uk-img>
+            <div class="uk-position-relative {% if app.request.attributes.get('_route') == 'home' %} uk-height-large {% endif %} uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light" data-src="{{ asset('assets/img/snowtricks_header.jpeg') }}" uk-height-viewport="{% if app.request.attributes.get('_route') == 'home' %}offset-top: true{% else %}offset-bottom: 70{% endif %}" uk-img>
                 {% block h1 %}{% endblock %}
 
                 {% if app.request.attributes.get('_route') == 'home' %}
@@ -38,11 +38,13 @@
             </div>
         </header>
 
-        <div class="uk-container">
-            {% block body %}{% endblock %}
-        </div>
+        <main>
+            <div class="uk-container">
+                {% block body %}{% endblock %}
+            </div>
+        </main>
 
-        <footer class="uk-background-secondary uk-light uk-padding uk-panel">
+        <footer class="uk-background-secondary uk-light uk-padding-small uk-panel">
             <div class="uk-text-center">
                 SnowTricks {{ 'now'|date('Y') }} - Steven Oyer
             </div>
