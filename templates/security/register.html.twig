@@ -3,11 +3,52 @@
 {% block title %}Snowtricks - Register{% endblock %}
 
 {% block h1 %}
-    <h1 class="uk-text-uppercase">Register</h1>
+    <h1 class="uk-text-uppercase">Sign Up</h1>
 {% endblock %}
 
 {% block body %}
 
-    
+    <div class="uk-margin-large-top uk-margin-bottom">
+        {{ form_start(registrationForm) }}
+            <fieldset class="uk-fieldset">
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: user"></span>
+                        {{ form_widget(registrationForm.name) }}
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: user"></span>
+                        {{ form_widget(registrationForm.username) }}
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: mail"></span>
+                        {{ form_widget(registrationForm.email) }}
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                        {{ form_widget(registrationForm.password) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <div class="uk-text-right">
+                <button type="submit" class="uk-button uk-button-secondary">Create an account</button>
+                <div class="uk-margin-top">
+                    <a href="{{ path('security_login') }}">Already an account ?</a>
+                </div>
+            </div>
+        {{ form_end(registrationForm) }}
+    </div>
 
 {% endblock %}

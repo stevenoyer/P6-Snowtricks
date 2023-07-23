@@ -3,11 +3,53 @@
 {% block title %}Snowtricks - Login{% endblock %}
 
 {% block h1 %}
-    <h1 class="uk-text-uppercase">Login</h1>
+    <h1 class="uk-text-uppercase">Sign In</h1>
 {% endblock %}
 
 {% block body %}
 
-    
+    <div class="uk-margin-large-top uk-margin-bottom">
+        {% if error %}
+            <div class="uk-alert-danger" uk-alert>
+                <a class="uk-alert-close" uk-close></a>
+                <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+            </div>
+        {% endif %}
+
+        {{ form_start(loginForm) }}
+            <fieldset class="uk-fieldset">
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: user"></span>
+                        {{ form_widget(loginForm.username) }}
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                        {{ form_widget(loginForm.password) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <div class="uk-text-right">
+                <button type="submit" class="uk-button uk-button-secondary">Login</button>
+
+                <div class="uk-margin-top">
+                    <a href="{{ path('security_register') }}">Register</a>
+                    <span class="uk-margin-small-left uk-margin-small-right">/</span>
+                    <a href="{{ path('security_forgot_password') }}">Forgot password ?</a>
+                </div>
+            </div>
+
+            <input type="hidden" name="_csrf_token"
+                value="{{ csrf_token('authenticate') }}"
+            >
+
+        {{ form_end(loginForm) }}
+    </div>
 
 {% endblock %}
