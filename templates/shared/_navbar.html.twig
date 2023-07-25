@@ -12,8 +12,8 @@
 
                 <ul class="uk-navbar-nav">
                     <li class="uk-active"><a href="{{ path('home') }}">Home</a></li>
+                    <li><a href="{{ path('home') }}#tricks">Tricks</a></li>
                     {% if app.user %}
-                        <li><a href="#">Tricks</a></li>
                         <li><a href="#">My profile</a></li>
                         <li>
                             <a href="{{ path('security_logout') }}">

@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
-    #[Route('/category/create', name: 'category_create')]
+    #[Route('/group/create', name: 'category_create')]
     public function index(): Response
     {
         // To do
@@ -17,7 +17,7 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/edit/{slug}', name: 'category_edit')]
+    #[Route('/group/edit/{slug}', name: 'category_edit')]
     public function edit($slug): Response
     {
         // To do

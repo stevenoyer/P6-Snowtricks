@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrickController extends AbstractController
 {
 
-    #[Route('/trick/create', name: 'trick_create')]
+    #[Route('/tricks/create', name: 'trick_create')]
     public function create(): Response
     {
         // To do
@@ -18,7 +18,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/trick/{slug}', name: 'trick_show')]
+    #[Route('/tricks/details/{slug}', name: 'trick_show')]
     public function show($slug): Response
     {
         // To do
@@ -27,7 +27,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/trick/edit/{slug}', name: 'trick_edit')]
+    #[Route('/tricks/edit/{slug}', name: 'trick_edit')]
     public function edit($slug): Response
     {
         // To do
