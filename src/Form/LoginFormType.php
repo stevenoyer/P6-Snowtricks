@@ -25,7 +25,18 @@ class LoginFormType extends AbstractType
                     'placeholder' => 'Username',
                     'autofocus' => 'true',
                     'required' => 'true'
-                ]
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a username',
+                    ]),
+                    new Length([
+                        'min' => 4,
+                        'minMessage' => 'Your username should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                ],
             ])
             ->add('password', PasswordType::class, [
                 'label' => '',

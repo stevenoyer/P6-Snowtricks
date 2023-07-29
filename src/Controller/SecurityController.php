@@ -20,9 +20,10 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'security_login')]
     public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $factory): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) 
+        {
+            return $this->redirectToRoute('user_profile');
+        }
 
         //$form = $this->createForm(LoginFormType::class, ['username' => $authenticationUtils->getLastUsername()]);
         $form = $factory->createNamed('', LoginFormType::class);
@@ -43,6 +44,11 @@ class SecurityController extends AbstractController
     #[Route('/registration', name: 'security_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
+        if ($this->getUser()) 
+        {
+            return $this->redirectToRoute('user_profile');
+        }
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -92,6 +98,5 @@ class SecurityController extends AbstractController
     #[Route(path: '/logout', name: 'security_logout')]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }
