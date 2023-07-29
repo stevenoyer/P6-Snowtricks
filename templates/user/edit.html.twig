@@ -8,6 +8,58 @@
 
 {% block body %}
 
-    
+    <div class="uk-margin-large-top uk-margin-bottom">
+        {{ form_start(formView) }}
+            <fieldset class="uk-fieldset">
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: user"></span>
+                        {{ form_widget(formView.name) }}
+                    </div>
+                        {{ form_errors(formView.name) }}
+                </div>
+
+                <div class="uk-margin" uk-margin>
+                    <div uk-form-custom="target: true">
+                        {{ form_widget(formView.avatar) }}
+                        <input class="uk-input uk-form-width-medium" type="text" placeholder="Select avatar" aria-label="Custom controls" disabled>
+                    </div>
+                    {{ form_errors(formView.avatar) }}
+                </div>
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: user"></span>
+                        {{ form_widget(formView.username) }}
+                    </div>
+                        {{ form_errors(formView.username) }}
+                </div>
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: mail"></span>
+                        {{ form_widget(formView.email) }}
+                    </div>
+                        {{ form_errors(formView.email) }}
+                </div>
+{# 
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                        {{ form_widget(formView.password) }}
+                    </div>
+                        {{ form_errors(formView.password) }}
+                </div> #}
+
+            </fieldset>
+
+            <div class="uk-text-right">
+                <a href="{{ path('user_profile') }}" class="uk-button uk-button-danger">Cancel</a>
+                <button type="submit" class="uk-button uk-button-success">Update</button>
+            </div>
+            
+        {{ form_end(formView) }}
+    </div>
 
 {% endblock %}
