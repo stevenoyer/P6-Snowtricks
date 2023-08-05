@@ -1,0 +1,14 @@
+{
+    "name": "SnowTricks",
+    "short_name": "snowtricks",
+    "start_url": "/",
+    "display": "standalone",
+    "icons": [{
+      "src": "favicon",
+      "sizes": "256x256",
+      "type": "image/x-icon"
+    }],
+    "related_applications": [{
+      "platform": "web"
+    }]
+  }
