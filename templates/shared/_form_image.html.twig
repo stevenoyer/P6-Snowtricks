@@ -1,0 +1,21 @@
+<div id="images-form">
+    <div class="uk-padding-small not-remove" uk-margin>
+        <button class="uk-button uk-button-success add-image" uk-icon="plus"></button>
+    </div>
+
+    <div class="uk-padding-small not-remove" uk-margin>
+        <div uk-form-custom="target: true">
+            <input type="file" accept=".jpg, .png, .jpeg" name="trick_form[images][][file]">
+            <input class="uk-input uk-form-width-medium" type="text" placeholder="Select an image" aria-label="Custom controls" disabled>
+        </div>
+        <input type="text" class="uk-input" name="trick_form[images][][alt]" placeholder="Alternative text">
+        <button class="uk-button uk-button-danger remove-image" uk-icon="trash"></button>
+    </div>
+    
+    {% if not formView.vars.valid %}
+        <div class="uk-alert-danger" uk-alert>
+            <a class="uk-alert-close" uk-close></a>
+            {{ form_errors(formView.images) }}
+        </div>
+    {% endif %}
+</div>

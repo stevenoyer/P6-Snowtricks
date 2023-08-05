@@ -8,6 +8,125 @@
 
 {% block body %}
 
-    
+    <div class="uk-margin-large-top uk-margin-bottom">
+        {{ form_start(formView) }}
+            <fieldset class="uk-fieldset">
+
+                <div class="uk-padding-small">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: pencil"></span>
+                        {{ form_widget(formView.title) }}
+                    </div>
+
+                    
+                    {% if not formView.vars.valid %}
+                        <div class="uk-alert-danger" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            {{ form_errors(formView.title) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="uk-padding-small" uk-margin>
+                    <div uk-form-custom="target: true">
+                        {{ form_widget(formView.mainPicture) }}
+                        <input class="uk-input uk-form-width-medium" type="text" placeholder="Select main picture" aria-label="Custom controls" disabled>
+                    </div>
+                    
+                    {% if not formView.vars.valid %}
+                        <div class="uk-alert-danger" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            {{ form_errors(formView.mainPicture) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="uk-padding-small">
+                    <hr>
+                    <label>Pictures</label>
+                </div>
+
+                {% include "shared/_form_image.html.twig" %}
+
+                <div class="uk-padding-small">
+                    <hr>
+                </div>
+
+                <div class="uk-padding-small">
+                    <hr>
+                    <label>Videos</label>
+                </div>
+
+                {% include "shared/_form_video.html.twig" %}
+
+                <div class="uk-padding-small">
+                    <hr>
+                </div>
+
+                <div class="uk-padding-small uk-grid-collapse" uk-grid>
+                    <div class="uk-width-1-1 uk-width-expand@m uk-padding-right">
+                        <div class="uk-inline uk-width-1-1">
+                            {{ form_widget(formView.state) }}
+                        </div>
+                        
+                        {% if not formView.vars.valid %}
+                            <div class="uk-alert-danger" uk-alert>
+                                <a class="uk-alert-close" uk-close></a>
+                                {{ form_errors(formView.state) }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="uk-width-1-6"></div>
+
+                    <div class="uk-width-1-1 uk-width-expand@m">
+                        <div class="uk-inline uk-width-1-1">
+                            {{ form_widget(formView.category) }}
+                        </div>
+                        
+                        {% if not formView.vars.valid %}
+                            <div class="uk-alert-danger" uk-alert>
+                                <a class="uk-alert-close" uk-close></a>
+                                {{ form_errors(formView.category) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="uk-padding-small">
+                    <div class="uk-inline uk-width-1-1">
+                        {{ form_widget(formView.introtext) }}
+                    </div>
+                    
+                    {% if not formView.vars.valid %}
+                        <div class="uk-alert-danger" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            {{ form_errors(formView.introtext) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="uk-padding-small">
+                    <div class="uk-inline uk-width-1-1">
+                        {{ form_widget(formView.content) }}
+                    </div>
+
+                    {% if not formView.vars.valid %}
+                        <div class="uk-alert-danger" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            {{ form_errors(formView.content) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </fieldset>
+
+            <div class="uk-padding-small uk-text-right">
+                <a href="{{ path('home') }}" class="uk-button uk-button-danger">Cancel</a>
+                <button type="submit" class="uk-button uk-button-success">Create</button>
+            </div>
+            
+        {{ form_end(formView) }}
+    </div>
 
 {% endblock %}

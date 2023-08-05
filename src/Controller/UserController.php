@@ -17,11 +17,7 @@ class UserController extends AbstractController
     #[Route('/profile', name: 'user_profile')]
     public function show(): Response
     {
-
-        // To do
-        return $this->render('user/show.html.twig', [
-            
-        ]);
+        return $this->render('user/show.html.twig');
     }
 
     #[Route('/profile/edit', name: 'user_edit')]
@@ -49,8 +45,6 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_profile');
         }
         
-
-        // To do
         return $this->render('user/edit.html.twig', [
             'formView' => $form->createView()
         ]);

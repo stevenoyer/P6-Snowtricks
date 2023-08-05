@@ -8,8 +8,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploader
 {
-    private $targetDirectory;
-    private $slugger;
+    protected $targetDirectory;
+    protected $slugger;
 
     public function __construct($targetDirectory, SluggerInterface $slugger)
     {
@@ -17,8 +17,10 @@ class FileUploader
         $this->slugger = $slugger;
     }
 
-    public function upload(UploadedFile $file): string
+    public function upload(UploadedFile $file): ?string
     {
+        if (empty($file)) return false;
+
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename, '_');
         $filename = uniqid() . '_' . $safeFilename . '.' . $file->guessExtension();
