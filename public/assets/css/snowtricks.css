@@ -125,3 +125,13 @@ header .scroll-next polyline {
         transform: translateY(-2.5px);
     }
 }
+
+@media screen and (min-width: 768px) {
+    #toggle-btn-media {
+        display: none;
+    }
+
+    #toggle-medias[hidden] {
+        display: block !important;
+    }
+}
