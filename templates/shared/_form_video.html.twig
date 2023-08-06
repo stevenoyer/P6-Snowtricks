@@ -1,0 +1,22 @@
+<div id="videos-form">
+    <div class="uk-padding-small not-remove" uk-margin>
+        <button class="uk-button uk-button-success add-video" uk-icon="plus"></button>
+    </div>
+
+    <div class="uk-padding-small not-remove" uk-margin>
+        <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: video-camera"></span>
+            <input class="uk-input" inputmode="url" placeholder="Video Url" type="url" name="trick_form[videos][]">
+        </div>
+        
+        <button class="uk-button uk-button-danger remove-video" uk-icon="trash"></button>
+    </div>
+
+
+    {% if not formView.vars.valid %}
+        <div class="uk-alert-danger" uk-alert>
+            <a class="uk-alert-close" uk-close></a>
+            {{ form_errors(formView.videos) }}
+        </div>
+    {% endif %}
+</div>

@@ -25,7 +25,6 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('user_profile');
         }
 
-        //$form = $this->createForm(LoginFormType::class, ['username' => $authenticationUtils->getLastUsername()]);
         $form = $factory->createNamed('', LoginFormType::class);
         
         // get the login error if there is one
@@ -78,18 +77,16 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/forgot_password', name: 'security_forgot_password')]
-    public function forgot_password(): Response
+    public function forgotPassword(): Response
     {
-        // To do
         return $this->render('security/forgot_password.html.twig', [
             
         ]);
     }
 
     #[Route('/reset_password/{token}', name: 'security_reset_password')]
-    public function reset_password($token): Response
+    public function resetPassword($token): Response
     {
-        // To do
         return $this->render('security/reset.html.twig', [
             
         ]);

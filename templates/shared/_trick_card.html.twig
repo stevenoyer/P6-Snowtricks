@@ -1,9 +1,18 @@
-<div class="uk-card uk-card-default">
-    <div class="uk-card-media-top">
-        <img src="{{ item.image }}" width="1800" height="1200" alt="">
+<a href="{{ path('trick_show', { slug: item.slug }) }}" class="uk-link-toggle">
+    <div class="uk-card uk-card-default">
+        <div class="uk-card-media-top uk-text-center">
+            <img src="{{ asset('uploads/pictures/') ~ item.mainPicture }}" width="1800" height="1200" alt="Main image of the trick {{ item.title }}">
+        </div>
+        <div class="uk-card-body">
+            <h3 class="uk-card-title">{{ item.title }}</h3>
+            <p>{{ item.introtext }}</p>
+        </div>
+
+        {% if app.user %}
+            <div class="uk-card-footer uk-text-right">
+                <a href="{{ path('trick_edit', { slug: item.slug }) }}" class="uk-button uk-button-text uk-margin-right"><span uk-icon="pencil"></span></a>
+                <a onclick="return confirm('Do you really want to delete this trick?');" href="{{ path('trick_delete', { slug: item.slug }) }}" class="uk-button uk-text-danger uk-button-text trick-delete"><span uk-icon="trash"></span></a>
+            </div>
+        {% endif %}
     </div>
-    <div class="uk-card-body">
-        <h3 class="uk-card-title">{{ item.title }}</h3>
-        <p>{{ item.description }}</p>
-    </div>
-</div>
+</a>
