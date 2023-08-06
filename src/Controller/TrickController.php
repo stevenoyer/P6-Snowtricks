@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Video;
+use App\Form\CommentFormType;
 use App\Form\TrickFormType;
 use App\Media\ImageManagement;
 use App\Media\VideoManagement;
@@ -95,8 +96,16 @@ class TrickController extends AbstractController
             'slug' => $slug
         ]);
 
+        if (!$trick)
+        {
+            return throw $this->createNotFoundException('The page you requested does not exist or no longer exists.');
+        }
+
+        $commentForm = $this->createForm(CommentFormType::class, null, ['action' => $this->generateUrl('add_comment', ['slug' => $slug])]);
+
         return $this->render('trick/show.html.twig', [
-            'item' => $trick
+            'item' => $trick,
+            'commentForm' => $commentForm->createView()
         ]);
     }
 
@@ -106,6 +115,11 @@ class TrickController extends AbstractController
         $trick = $this->trickRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$trick)
+        {
+            return throw $this->createNotFoundException('The page you requested does not exist or no longer exists.');
+        }
 
         $form = $this->createForm(TrickFormType::class, $trick);
 
