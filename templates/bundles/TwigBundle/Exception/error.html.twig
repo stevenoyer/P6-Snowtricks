@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks - server{% endblock %}
+
+{% block h1 %}
+    <h1 class="uk-text-uppercase">Error server</h1>
+{% endblock %}
+
+{% block body %}
+
+    <p class="uk-text-center uk-margin-large-top">
+        An error has occurred, please try again later.
+        <a href="{{ path('home') }}">Back to home</a>.
+    </p>
+
+{% endblock %}
