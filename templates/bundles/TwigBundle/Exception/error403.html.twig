@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks - 403{% endblock %}
+
+{% block h1 %}
+    <h1 class="uk-text-uppercase">Error 403</h1>
+{% endblock %}
+
+{% block body %}
+
+    <p class="uk-text-center uk-margin-large-top">
+        You are not authorized to access this resource. Please authenticate 
+        <a href="{{ path('home') }}">here</a>.
+    </p>
+
+{% endblock %}

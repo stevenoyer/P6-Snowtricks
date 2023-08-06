@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks - 404{% endblock %}
+
+{% block h1 %}
+    <h1 class="uk-text-uppercase">Error 404</h1>
+{% endblock %}
+
+{% block body %}
+
+    <p class="uk-text-center uk-margin-large-top">
+        The requested page couldn't be located. Checkout for any URL
+        misspelling or <a href="{{ path('home') }}">return to the home</a>.
+    </p>
+
+{% endblock %}
