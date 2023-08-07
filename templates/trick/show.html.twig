@@ -24,7 +24,7 @@
         <button href="#toggle-medias" class="uk-button uk-button-default" type="button" uk-toggle="target: #toggle-medias; animation: uk-animation-fade;">See medias</button>
     </div>
 
-    <div id="toggle-medias" uk-slider hidden>
+    <div id="toggle-medias" class="uk-margin" uk-slider hidden>
 
         <div class="uk-position-relative">
 
@@ -96,23 +96,23 @@
         <span class="uk-badge"><i uk-icon="icon: user; ratio: 0.8;" class="uk-margin-small-right"></i> {{ item.author.name }}</span>
     </div>
 
-    <hr>
 
-    <div id="comment" class="uk-padding-top uk-padding-bottom uk-margin">
+    {% if app.user %}
+        <hr>
+        <div id="comment" class="uk-padding-top uk-padding-bottom uk-margin">
 
-        {% if app.user %}
-            {{ form_start(commentForm) }}
+                {{ form_start(commentForm) }}
 
-                {{ form_widget(commentForm.content) }}
+                    {{ form_widget(commentForm.content) }}
 
-                <div class="uk-text-right uk-margin">
-                    <button type="submit" class="uk-button uk-button-primary">Leave a comment</button>
-                </div>
+                    <div class="uk-text-right uk-margin">
+                        <button type="submit" class="uk-button uk-button-primary">Leave a comment</button>
+                    </div>
 
-            {{ form_end(commentForm) }}
-        {% endif %}
-        
-    </div>
+                {{ form_end(commentForm) }}
+            
+        </div>
+    {% endif %}
 
     <hr>
 
@@ -129,9 +129,12 @@
                             <h4 class="uk-comment-title uk-margin-remove">{{ comment.author.name }}</h4>
                             <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
                                 <li>{{ comment.createdAt | date('d F Y H:i') }}</li>
-                                <li>
-                                    <a onclick="return confirm('Do you really want to delete this comment?');" href="{{ path('delete_comment', {'slug': item.slug, 'id': comment.id}) }}" class="uk-button uk-button-text uk-text-danger" uk-icon="trash"></a>
-                                </li>
+                                {% if comment.author == app.user %}
+                                    <li>
+                                        <a onclick="return confirm('Do you really want to delete this comment?');" href="{{ path('delete_comment', {'slug': item.slug, 'id': comment.id}) }}" class="uk-button uk-button-text uk-text-danger" uk-icon="trash"></a>
+                                    </li>
+                                {% endif %}
+                                
                             </ul>
                         </div>
                     </div>

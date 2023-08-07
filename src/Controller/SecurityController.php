@@ -61,8 +61,8 @@ class SecurityController extends AbstractController
                 )
             );
             $user->setValidate(false);
-
             $user->setCreatedAt(new DateTime('now'));
+            $user->setAvatar('user_profile.png');
 
             $entityManager->persist($user);
             $entityManager->flush();

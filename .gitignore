@@ -23,4 +23,8 @@
 /public/uploads/
 /public/uploads/**
 
+!/public/uploads/
+!/public/uploads/avatars/
+!/public/uploads/avatars/user_profile.png
+
 .DS_Store
