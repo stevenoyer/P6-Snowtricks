@@ -184,7 +184,6 @@ class SecurityController extends AbstractController
 
         if ($user->getTokenExpiration() < time())
         {
-            dd($user->getTokenExpiration(), time());
             $this->addFlash('danger', 'The token has expired. You need to request a new password reset.');
             return $this->redirectToRoute('security_forgot_password');
         }
@@ -202,7 +201,7 @@ class SecurityController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
-            
+
             $user->setTokenValidation(null);
             $user->setTokenExpiration(null);
 
