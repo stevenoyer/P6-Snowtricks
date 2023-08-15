@@ -194,7 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->token_validation;
     }
 
-    public function setTokenValidation(string $token_validation): self
+    public function setTokenValidation(?string $token_validation): self
     {
         $this->token_validation = $token_validation;
 
@@ -206,7 +206,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->token_expiration;
     }
 
-    public function setTokenExpiration(string $token_expiration): self
+    public function setTokenExpiration(?string $token_expiration): self
     {
         $this->token_expiration = $token_expiration;
 
