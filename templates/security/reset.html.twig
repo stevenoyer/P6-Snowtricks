@@ -8,6 +8,35 @@
 
 {% block body %}
 
-    
+    <div class="uk-margin-large-top uk-margin-bottom">
+        {{ form_start(resetForm) }}
+            <fieldset class="uk-fieldset">
+
+                <div class="uk-margin">
+                    <div class="uk-inline uk-width-1-1">
+                        <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                        {{ form_widget(resetForm.password) }}
+                    </div>
+
+                    {% if not resetForm.vars.valid %}
+                        <div class="uk-alert-danger" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            {{ form_errors(resetForm.password) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+            </fieldset>
+
+            <div class="uk-text-right">
+                <button type="submit" class="uk-button uk-button-secondary">Reset password</button>
+            </div>
+
+            <input type="hidden" name="_csrf_token"
+                value="{{ csrf_token('authenticate') }}"
+            >
+
+        {{ form_end(resetForm) }}
+    </div>
 
 {% endblock %}
