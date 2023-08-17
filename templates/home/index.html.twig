@@ -8,7 +8,7 @@
 
 {% block body %}
 
-    <div id="tricks" class="uk-margin-top">
+    <div id="tricks" class="uk-margin-top uk-margin-large-bottom">
         <h2>Bienvenue sur SnowTricks !</h2>
 
         {% if app.user %}
@@ -26,9 +26,39 @@
             {% endfor %}
         </div>
 
-        <div class="load-more uk-margin-top uk-text-center uk-padding">
-            <button class="uk-button uk-button-secondary">Load more</button>
-        </div>
+        {% if count >= 9 %}
+            <div class="load-more uk-margin-top uk-text-center uk-padding">
+                <button onclick="loadMoreTricks()" id="loadMoreTricks" class="uk-button uk-button-secondary">Load more</button>
+            </div>
+        {% endif %}
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        clickTricks = 0;
+
+        function loadMoreTricks()
+        {
+            clickTricks++;
+
+            let start = 9 * clickTricks;
+            let url = "{{ path('tricks_load') }}/" + start;
+            
+            axios.get(url)
+                .then((response) => {
+                    document.querySelector('.tricks-grid').insertAdjacentHTML('beforeend', response.data);
+                    if (response.data.length == 0)
+                    {
+                        alert('There are no other tricks.');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+
+        }
+    </script>
 {% endblock %}

@@ -1,0 +1,26 @@
+{% for comment in comments %}
+    <article class="uk-comment uk-comment-primary uk-margin" role="comment">
+        <header class="uk-comment-header">
+            <div class="uk-grid-medium uk-flex-middle" uk-grid>
+                <div class="uk-width-auto">
+                    <img class="uk-comment-avatar" src="{{ asset('uploads/avatars/' ~ comment.author.avatar) }}" width="80" height="80" alt="Profile user {{ comment.author.name }}">
+                </div>
+                <div class="uk-width-expand">
+                    <h4 class="uk-comment-title uk-margin-remove">{{ comment.author.name }}</h4>
+                    <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                        <li>{{ comment.createdAt | date('d F Y H:i') }}</li>
+                        {% if comment.author == app.user %}
+                            <li>
+                                <a onclick="return confirm('Do you really want to delete this comment?');" href="{{ path('delete_comment', {'slug': comment.trick.slug, 'id': comment.id}) }}" class="uk-button uk-button-text uk-text-danger" uk-icon="trash"></a>
+                            </li>
+                        {% endif %}
+                        
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <div class="uk-comment-body">
+            <p>{{ comment.content }}</p>
+        </div>
+    </article>
+{% endfor %}
