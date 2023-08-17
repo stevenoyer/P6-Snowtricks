@@ -35,6 +35,16 @@ class TrickController extends AbstractController
         $this->trickRepository = $trickRepository;
     }
 
+    #[Route('/tricks/load/{start}', name: 'tricks_load', requirements:["start" => "\d+"])]
+    public function load($start = 9)
+    {
+        $items = $this->trickRepository->findBy([], ['createdAt' => 'DESC'], 9, $start);
+        
+        return $this->render('trick/load.html.twig', [
+            'items' => $items
+        ]);
+    }
+
     #[Route('/tricks/create', name: 'trick_create')]
     public function create(Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
     {

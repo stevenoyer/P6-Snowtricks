@@ -14,10 +14,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommentController extends AbstractController
 {
-    #[Route('/tricks/details/{slug}/comment', name: 'add_comment', methods: 'POST')]
-    public function create($slug, Request $request, TrickRepository $trickRepository, EntityManagerInterface $em): Response
+    private $em;
+    private $trickRepository;
+    private $commentRepository;
+
+    public function __construct(EntityManagerInterface $em, TrickRepository $trickRepository, CommentRepository $commentRepository)
     {
-        $trick = $trickRepository->findOneBy(['slug' => $slug]);
+        $this->em = $em;
+        $this->trickRepository = $trickRepository;
+        $this->commentRepository = $commentRepository;
+    }
+
+    #[Route('/tricks/details/{slug}/comment', name: 'add_comment', methods: 'POST')]
+    public function create($slug, Request $request): Response
+    {
+        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
         if (!$trick) 
         {
             $this->addFlash('danger', 'The trick does not exist !');
@@ -37,17 +48,17 @@ class CommentController extends AbstractController
         $comment->setCreatedAt(new DateTimeImmutable('now'));
         $comment->setUpdateAt(new DateTimeImmutable('now'));
 
-        $em->persist($comment);
-        $em->flush();
+        $this->em->persist($comment);
+        $this->em->flush();
 
         $this->addFlash('success', 'Your comment has been published.');
         return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
     }
 
     #[Route('/tricks/details/{slug}/comment/{id}/delete', name: 'delete_comment', methods: 'GET')]
-    public function delete($slug, $id, TrickRepository $trickRepository, EntityManagerInterface $em, CommentRepository $commentRepository): Response
+    public function delete($slug, $id): Response
     {
-        $trick = $trickRepository->findOneBy(['slug' => $slug]);
+        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
         if (!$trick) 
         {
             $this->addFlash('danger', 'The trick does not exist !');
@@ -60,7 +71,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('security_login');
         }
         
-        $comment = $commentRepository->find($id);
+        $comment = $this->commentRepository->find($id);
         if (!$comment) 
         {
             $this->addFlash('danger', 'The comment does not exist !');
@@ -73,10 +84,20 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
         }
 
-        $em->remove($comment);
-        $em->flush();
+        $this->em->remove($comment);
+        $this->em->flush();
 
         $this->addFlash('success', 'Your comment has been deleted.');
         return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
+    }
+
+    #[Route('/tricks/details/{id}/comments/load/{start}', name: 'load_comments', requirements:["start" => "\d+"])]
+    public function loadMore($id, $start = 10)
+    {
+        $comments = $this->commentRepository->findBy(['trick' => $id], ['createdAt' => 'DESC'], 10, $start);
+
+        return $this->render('comment/load.html.twig', [
+            'comments' => $comments
+        ]);
     }
 }

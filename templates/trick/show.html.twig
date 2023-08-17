@@ -118,7 +118,7 @@
 
     <div id="comments" class="uk-padding-top uk-padding-bottom uk-margin-large-bottom">
         <h2>Comments</h2>
-        {% for comment in item.comments|reverse %}
+        {% for comment in item.comments|reverse|slice(0, 10) %}
             <article class="uk-comment uk-comment-primary uk-margin" role="comment">
                 <header class="uk-comment-header">
                     <div class="uk-grid-medium uk-flex-middle" uk-grid>
@@ -146,5 +146,40 @@
         {% endfor %}
     </div>
 
+    {% if item.comments|length > 10 %}
+        <div class="load-more uk-margin-top uk-text-center uk-padding">
+            <button onclick="loadMoreComments()" class="uk-button uk-button-secondary">Load more</button>
+        </div>
+    {% endif %}
 
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        let itemId = "{{ item.id }}";
+        clickComments = 0;
+
+        function loadMoreComments()
+        {
+            clickComments++;
+            let start = 10 * clickComments;
+            console.log(start)
+            let url = "{{ path('load_comments', {'id': item.id}) }}/" + start;
+            
+            axios.get(url)
+                .then((response) => {
+                    document.querySelector('#comments').insertAdjacentHTML('beforeend', response.data);
+                    if (response.data.length == 0)
+                    {
+                        alert('There are no further comments.');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error)
+                });
+
+        }
+    </script>
 {% endblock %}
