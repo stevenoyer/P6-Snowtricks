@@ -3,7 +3,7 @@
 ## Installation 
 Faire une copie de ce répertoire :
 ```
-git clone
+git clone https://github.com/stevenoyer/P6-Snowtricks.git
 ```
 
 Après l'installation ouvrez le projet dans votre éditeur et dans le terminal tapez :
