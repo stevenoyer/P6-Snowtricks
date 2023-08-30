@@ -12,7 +12,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(TrickRepository $trickRepository): Response
     {
-        $items = $trickRepository->findBy(['state' => 1], [], 9);
+        $items = $trickRepository->findBy(['state' => 1], ['createdAt' => 'DESC'], 9);
 
         return $this->render('home/index.html.twig', [
             'items' => $items,
