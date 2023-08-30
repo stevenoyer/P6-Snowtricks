@@ -165,7 +165,6 @@
         {
             clickComments++;
             let start = 10 * clickComments;
-            console.log(start)
             let url = "{{ path('load_comments', {'id': item.id}) }}/" + start;
             
             axios.get(url)
