@@ -27,7 +27,7 @@ class CommentService
     /**
      * Create comment for Trick
      */
-    public function createComment(Trick $trick, $request, User $user): ?array
+    public function createComment(Trick $trick, $content, User $user): ?array
     {
         // Check trick
         if (!$trick) {
@@ -52,7 +52,7 @@ class CommentService
         // Create new comment
         $comment = new Comment;
         $comment->setTrick($trick);
-        $comment->setContent($request->request->get('comment_form')['content']);
+        $comment->setContent($content);
         $comment->setAuthor($user);
         $comment->setCreatedAt(new DateTimeImmutable('now'));
         $comment->setUpdateAt(new DateTimeImmutable('now'));

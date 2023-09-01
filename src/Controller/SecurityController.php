@@ -80,7 +80,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $register = $this->securityService->registerUser($user, $form);
+            $register = $this->securityService->registerUser($user, $form->get('password')->getData());
 
             $this->addFlash($register['type'], $register['message']);
             return $this->redirectToRoute($register['redirectRoute'], $register['paramsRoute']);
@@ -101,7 +101,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $forgot = $this->securityService->forgotPassword($form);
+            $forgot = $this->securityService->forgotPassword($form->get('email')->getData());
 
             $this->addFlash($forgot['type'], $forgot['message']);
             return $this->redirectToRoute($forgot['redirectRoute'], $forgot['paramsRoute']);
@@ -135,7 +135,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $reset = $this->securityService->resetPassword($user, $form);
+            $reset = $this->securityService->resetPassword($user, $form->get('password')->getData());
 
             $this->addFlash($reset['type'], $reset['message']);
             return $this->redirectToRoute($reset['redirectRoute'], $reset['paramsRoute']);

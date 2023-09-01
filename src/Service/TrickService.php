@@ -36,14 +36,14 @@ class TrickService
     /**
      * Create a trick
      */
-    public function createTrick(Trick $trick, $form, User $user): array
+    public function createTrick(Trick $trick, $data, User $user): array
     {
         $trick->setSlug(strtolower($this->slugger->slug($trick->getTitle())));
         $trick->setCreatedAt(new DateTimeImmutable('now'));
         $trick->setUpdateAt(new DateTimeImmutable('now'));
 
         // Main image processing via a service
-        $mainPicture = $form->get('mainPicture')->getData();
+        $mainPicture = $data['mainPicture'];
         if (!empty($mainPicture)) {
             $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
         }
@@ -56,13 +56,13 @@ class TrickService
         $trick->setAuthor($user);
 
         // Processing images via a service
-        $images = $form->getExtraData()['images'];
+        $images = $data['images'];
         if (!empty($images)) {
             $this->imageManagement->process($images, $trick);
         }
 
         // Processing videos via a service
-        $videos = $form->getExtraData()['videos'];
+        $videos = $data['videos'];
         if (!empty($videos)) {
             $this->videoManagement->process($videos, $trick);
         }
@@ -81,25 +81,25 @@ class TrickService
     /**
      * Edit a trick
      */
-    public function editTrick(Trick $trick, $form, User $user): array
+    public function editTrick(Trick $trick, $data): array
     {
         $trick->setSlug(strtolower($this->slugger->slug($trick->getTitle())));
         $trick->setUpdateAt(new DateTimeImmutable('now'));
 
         // Main image processing via a service
-        $mainPicture = $form->get('mainPicture')->getData();
+        $mainPicture = $data['mainPicture'];
         if (!empty($mainPicture)) {
             $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
         }
 
         // Processing images via a service
-        $images = $form->getExtraData()['images'];
+        $images = $data['images'];
         if (!empty($images)) {
             $this->imageManagement->process($images, $trick);
         }
 
         // Processing videos via a service
-        $videos = $form->getExtraData()['videos'];
+        $videos = $data['videos'];
         if (!empty($videos)) {
             $this->videoManagement->process($videos, $trick);
         }

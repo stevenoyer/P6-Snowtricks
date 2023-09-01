@@ -41,7 +41,7 @@ class ImageController extends AbstractController
     public function update($slug, $id, Request $request)
     {
 
-        $update = $this->imageService->updateAltImage($slug, $id, $request);
+        $update = $this->imageService->updateAltImage($slug, $id, $request->request->get('image_alt'));
 
         $this->addFlash($update['type'], $update['message']);
         return $this->redirectToRoute($update['redirectRoute'], $update['paramsRoute']);

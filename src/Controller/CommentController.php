@@ -31,7 +31,7 @@ class CommentController extends AbstractController
     #[Route('/tricks/details/{slug}/comment', name: 'add_comment', methods: ['POST'])]
     public function create(Trick $trick, Request $request): Response
     {
-        $create = $this->commentService->createComment($trick, $request, $this->getUser());
+        $create = $this->commentService->createComment($trick, $request->request->get('comment_form')['content'], $this->getUser());
 
         $this->addFlash($create['type'], $create['message']);
         return $this->redirectToRoute($create['redirectRoute'], $create['paramsRoute']);

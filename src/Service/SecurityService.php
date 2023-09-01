@@ -63,13 +63,13 @@ class SecurityService
     /**
      * Register user
      */
-    public function registerUser(User $user, $form): array
+    public function registerUser(User $user, $password): array
     {
         // encode the password
         $user->setPassword(
             $this->userPasswordHasher->hashPassword(
                 $user,
-                $form->get('password')->getData()
+                $password
             )
         );
 
@@ -106,9 +106,9 @@ class SecurityService
     /**
      * Forgot password
      */
-    public function forgotPassword($form): array
+    public function forgotPassword($email): array
     {
-        $user = $this->userRepository->findOneBy(['email' => $form->get('email')->getData()]);
+        $user = $this->userRepository->findOneBy(['email' => $email]);
         $token = $this->tokenGenerator->generate($user->getEmail());
 
         // Generate token and token expiry and insert into entity
@@ -141,13 +141,13 @@ class SecurityService
     /**
      * Reset password
      */
-    public function resetPassword($user, $form): array
+    public function resetPassword(User $user, $password): array
     {
         // encode the password
         $user->setPassword(
             $this->userPasswordHasher->hashPassword(
                 $user,
-                $form->get('password')->getData()
+                $password
             )
         );
 

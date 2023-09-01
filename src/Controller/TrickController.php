@@ -65,7 +65,12 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $create = $this->trickService->createTrick($trick, $form, $this->getUser());
+            $data = [
+                'mainPicture' => $form->getExtraData()['mainPicture'],
+                'images' => $form->getExtraData()['images'],
+                'videos' => $form->getExtraData()['videos']
+            ];
+            $create = $this->trickService->createTrick($trick, $data, $this->getUser());
 
             $this->addFlash($create['type'], $create['message']);
             return $this->redirectToRoute($create['redirectRoute'], $create['paramsRoute']);
@@ -94,7 +99,7 @@ class TrickController extends AbstractController
      * Edit a trick
      */
     #[Route('/tricks/edit/{slug}', name: 'trick_edit', methods: ['GET', 'POST'])]
-    public function edit(Trick $trick, Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
+    public function edit(Trick $trick, Request $request): Response
     {
         $form = $this->createForm(TrickFormType::class, $trick);
 
@@ -102,7 +107,12 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $update = $this->trickService->editTrick($trick, $form, $this->getUser());
+            $data = [
+                'mainPicture' => $form->getExtraData()['mainPicture'],
+                'images' => $form->getExtraData()['images'],
+                'videos' => $form->getExtraData()['videos']
+            ];
+            $update = $this->trickService->editTrick($trick, $data);
 
             $this->addFlash($update['type'], $update['message']);
             return $this->redirectToRoute($update['redirectRoute'], $update['paramsRoute']);

@@ -53,7 +53,7 @@ class ImageService
     /**
      * Updating the alternative text image
      */
-    public function updateAltImage($slug, $id, $request): array
+    public function updateAltImage($slug, $id, $image_alt): array
     {
         $image = $this->imageRepository->find($id);
         if (!$image) {
@@ -64,9 +64,6 @@ class ImageService
                 'paramsRoute' => ['slug' => $slug]
             ];
         }
-
-        // Get the new alternative text
-        $image_alt = $request->request->get('image_alt');
 
         if (empty($image_alt)) {
             return [
