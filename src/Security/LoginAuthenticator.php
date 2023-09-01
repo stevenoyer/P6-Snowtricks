@@ -42,16 +42,14 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
          */
         $user = $this->userRepository->findOneBy(['username' => $username]);
 
-        if (!$user)
-        {
+        if (!$user) {
             return throw new CustomUserMessageAuthenticationException('This user does not exist.');
         }
 
-        if (!$user->isValidate())
-        {
+        if (!$user->isValidate()) {
             return throw new CustomUserMessageAuthenticationException('This account has not been validated.');
         }
-        
+
         return new Passport(
             new UserBadge($username),
             new PasswordCredentials($request->request->get('password', '')),

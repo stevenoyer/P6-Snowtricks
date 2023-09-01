@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\ImageRepository;
 use App\Service\FileDeleter;
+use App\Service\ImageService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,62 +14,36 @@ use Symfony\Component\Routing\Annotation\Route;
 class ImageController extends AbstractController
 {
 
-    protected $imageRepository;
-    protected $fileDeleter;
-    protected $em;
+    protected $imageService;
 
-    public function __construct(ImageRepository $imageRepository, FileDeleter $fileDeleter, EntityManagerInterface $em)
+    public function __construct(ImageService $imageService)
     {
-        $this->imageRepository = $imageRepository;
-        $this->fileDeleter = $fileDeleter;
-        $this->em = $em;
+        $this->imageService = $imageService;
     }
 
-    #[Route('/trick/{slug}/image/delete/{id}', name: 'trick_image_remove')]
+    /**
+     * Delete a image
+     */
+    #[Route('/trick/{slug}/image/delete/{id}', name: 'trick_image_remove', methods: ['GET'])]
     public function remove($slug, $id): Response
     {
-        $image = $this->imageRepository->find($id);
-        if (!$image) 
-        {
-            $this->addFlash('danger', 'No image found for delete.');
-            return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
-        }
 
-        $this->fileDeleter->delete($image->getName());
-        
-        $this->em->remove($image);
-        $this->em->flush();
+        $remove = $this->imageService->deleteImage($slug, $id);
 
-        $this->addFlash('success', 'Image has been successfully deleted.');
-        return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
+        $this->addFlash($remove['type'], $remove['message']);
+        return $this->redirectToRoute($remove['redirectRoute'], $remove['paramsRoute']);
     }
 
-    #[Route('/trick/{slug}/image/update/{id}', name: 'trick_image_update', methods: 'POST')]
+    /**
+     * Updating the alternative text image
+     */
+    #[Route('/trick/{slug}/image/update/{id}', name: 'trick_image_update', methods: ['POST'])]
     public function update($slug, $id, Request $request)
     {
-        $image = $this->imageRepository->find($id);
-        if (!$image) 
-        {
-            $this->addFlash('danger', 'No image found for update.');
-            return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
-        }
 
-        $image_alt = $request->request->get('image_alt');
+        $update = $this->imageService->updateAltImage($slug, $id, $request);
 
-        if (empty($image_alt)) 
-        {
-            $this->addFlash('danger', 'Alternative text is empty.');
-            return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
-        }
-
-        $image->setAlt($image_alt);
-        $this->em->flush();
-
-        $this->addFlash('success', 'Alternative text has been successfully updated.');
-
-        return $this->redirectToRoute('trick_edit', [
-            'slug' => $slug
-        ]);
-
+        $this->addFlash($update['type'], $update['message']);
+        return $this->redirectToRoute($update['redirectRoute'], $update['paramsRoute']);
     }
 }

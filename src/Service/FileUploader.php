@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -17,6 +17,9 @@ class FileUploader
         $this->slugger = $slugger;
     }
 
+    /**
+     * This function lets you import files and save them. It makes file names unique.
+     */
     public function upload(UploadedFile $file): ?string
     {
         if (empty($file)) return false;
@@ -25,12 +28,9 @@ class FileUploader
         $safeFilename = $this->slugger->slug($originalFilename, '_');
         $filename = uniqid() . '_' . $safeFilename . '.' . $file->guessExtension();
 
-        try 
-        {
+        try {
             $file->move($this->getTargetDirectory(), $filename);
-        } 
-        catch (FileException $e) 
-        {
+        } catch (FileException $e) {
             throw $e;
         }
 

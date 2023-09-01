@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -7,7 +7,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 
-class UserNotification 
+class UserNotification
 {
     private $mailer;
 
@@ -16,6 +16,9 @@ class UserNotification
         $this->mailer = $mailer;
     }
 
+    /**
+     * Function that manages the sending of an e-mail to a u
+     */
     public function send(User $user, string $subject, string $message)
     {
         $mail = new Email();
@@ -27,5 +30,4 @@ class UserNotification
 
         $this->mailer->send($mail);
     }
-
 }

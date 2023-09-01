@@ -23,11 +23,10 @@ class AppFixtures extends Fixture
     {
 
         $categories_name = ['La manière de rider', 'Les grabs', 'Les rotations', 'Les flips', 'Les rotations désaxées', 'Les slides', 'Les one foot tricks', 'Old school'];
-        foreach ($categories_name as $category)
-        {
+        foreach ($categories_name as $category) {
             $categoryClass = new Category;
             $categoryClass->setName($category);
-            
+
             $manager->persist($categoryClass);
         }
 

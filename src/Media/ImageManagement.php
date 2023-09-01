@@ -19,19 +19,20 @@ class ImageManagement extends MediaManagement
         $this->em = $em;
     }
 
+    /**
+     * This function lets you download images linked to a trick and save them in a database.
+     */
     public function process(array $media, Trick $trick)
     {
         $files = $this->pictureUploader->process($media);
-                
-        foreach ($files as $file)
-        {
+
+        foreach ($files as $file) {
             $image = new Image;
             $image->setName($file['filename']);
             $image->setAlt($file['alt']);
             $image->setTrick($trick);
-            
+
             $this->em->persist($image);
         }
     }
-
 }

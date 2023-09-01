@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -11,16 +11,17 @@ class FileDeleter
         $this->picturesDirectory = $picturesDirectory;
     }
 
+    /**
+     * This function can be used to delete a file by name
+     */
     public function delete($filename)
     {
         $file = $this->picturesDirectory . $filename;
 
-        if (file_exists($file))
-        {
+        if (file_exists($file)) {
             unlink($file);
         }
 
         return false;
     }
-
 }
