@@ -95,17 +95,9 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/details/{slug}', name: 'trick_show', methods: ['GET'])]
-    public function show($slug): Response
+    public function show(Trick $trick): Response
     {
-        $trick = $this->trickRepository->findOneBy([
-            'slug' => $slug
-        ]);
-
-        if (!$trick) {
-            return throw $this->createNotFoundException('The page you requested does not exist or no longer exists.');
-        }
-
-        $commentForm = $this->createForm(CommentFormType::class, null, ['action' => $this->generateUrl('add_comment', ['slug' => $slug])]);
+        $commentForm = $this->createForm(CommentFormType::class, null, ['action' => $this->generateUrl('add_comment', ['slug' => $trick->getSlug()])]);
 
         return $this->render('trick/show.html.twig', [
             'item' => $trick,
@@ -114,16 +106,8 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/edit/{slug}', name: 'trick_edit', methods: ['GET', 'POST'])]
-    public function edit($slug, Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
+    public function edit(Trick $trick, Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
     {
-        $trick = $this->trickRepository->findOneBy([
-            'slug' => $slug
-        ]);
-
-        if (!$trick) {
-            return throw $this->createNotFoundException('The page you requested does not exist or no longer exists.');
-        }
-
         $form = $this->createForm(TrickFormType::class, $trick);
 
         $form->handleRequest($request);
@@ -161,15 +145,11 @@ class TrickController extends AbstractController
     }
 
     #[Route('/tricks/delete/{slug}', name: 'trick_delete', methods: ['GET'])]
-    public function delete($slug): Response
+    public function delete(Trick $trick): Response
     {
-        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
-
-        if ($trick) {
-            $this->addFlash('success', 'The trick has been successfully deleted.');
-            $this->em->remove($trick);
-            $this->em->flush();
-        }
+        $this->addFlash('success', 'The trick has been successfully deleted.');
+        $this->em->remove($trick);
+        $this->em->flush();
 
         return $this->redirectToRoute('home');
     }
