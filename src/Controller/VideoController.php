@@ -20,7 +20,7 @@ class VideoController extends AbstractController
         $this->em = $em;
     }
 
-    #[Route('/trick/{slug}/video/delete/{id}', name: 'trick_video_remove')]
+    #[Route('/trick/{slug}/video/delete/{id}', name: 'trick_video_remove', methods: ['GET'])]
     public function remove($slug, $id): Response
     {
         $video = $this->videoRepository->find($id);

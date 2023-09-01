@@ -20,7 +20,7 @@ class UserController extends AbstractController
         return $this->render('user/show.html.twig');
     }
 
-    #[Route('/profile/edit', name: 'user_edit')]
+    #[Route('/profile/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EntityManagerInterface $em, FileUploader $fileUploader): Response
     {
         /** @var User */

@@ -25,7 +25,7 @@ class CommentController extends AbstractController
         $this->commentRepository = $commentRepository;
     }
 
-    #[Route('/tricks/details/{slug}/comment', name: 'add_comment', methods: 'POST')]
+    #[Route('/tricks/details/{slug}/comment', name: 'add_comment', methods: ['POST'])]
     public function create($slug, Request $request): Response
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
@@ -53,7 +53,7 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
     }
 
-    #[Route('/tricks/details/{slug}/comment/{id}/delete', name: 'delete_comment', methods: 'GET')]
+    #[Route('/tricks/details/{slug}/comment/{id}/delete', name: 'delete_comment', methods: ['GET'])]
     public function delete($slug, $id): Response
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
@@ -85,7 +85,7 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
     }
 
-    #[Route('/tricks/details/{id}/comments/load/{start}', name: 'load_comments', requirements: ["start" => "\d+"])]
+    #[Route('/tricks/details/{id}/comments/load/{start}', name: 'load_comments', requirements: ["start" => "\d+"], methods: ['GET'])]
     public function loadMore($id, $start = 10)
     {
         $comments = $this->commentRepository->findBy(['trick' => $id], ['createdAt' => 'DESC'], 10, $start);

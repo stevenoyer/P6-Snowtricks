@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route('/', name: 'home', methods: ['GET'])]
     public function index(TrickRepository $trickRepository): Response
     {
         $items = $trickRepository->findBy(['state' => 1], ['createdAt' => 'DESC'], 9);

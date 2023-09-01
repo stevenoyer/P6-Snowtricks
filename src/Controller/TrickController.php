@@ -35,7 +35,7 @@ class TrickController extends AbstractController
         $this->trickRepository = $trickRepository;
     }
 
-    #[Route('/tricks/load/{start}', name: 'tricks_load', requirements: ["start" => "\d+"])]
+    #[Route('/tricks/load/{start}', name: 'tricks_load', requirements: ["start" => "\d+"], methods: ['GET'])]
     public function load($start = 9)
     {
         $items = $this->trickRepository->findBy([], ['createdAt' => 'DESC'], 9, $start);
@@ -45,7 +45,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/tricks/create', name: 'trick_create')]
+    #[Route('/tricks/create', name: 'trick_create', methods: ['GET', 'POST'])]
     public function create(Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
     {
         $trick = new Trick;
@@ -94,7 +94,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/tricks/details/{slug}', name: 'trick_show')]
+    #[Route('/tricks/details/{slug}', name: 'trick_show', methods: ['GET'])]
     public function show($slug): Response
     {
         $trick = $this->trickRepository->findOneBy([
@@ -113,7 +113,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/tricks/edit/{slug}', name: 'trick_edit')]
+    #[Route('/tricks/edit/{slug}', name: 'trick_edit', methods: ['GET', 'POST'])]
     public function edit($slug, Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
     {
         $trick = $this->trickRepository->findOneBy([
@@ -160,7 +160,7 @@ class TrickController extends AbstractController
         ]);
     }
 
-    #[Route('/tricks/delete/{slug}', name: 'trick_delete')]
+    #[Route('/tricks/delete/{slug}', name: 'trick_delete', methods: ['GET'])]
     public function delete($slug): Response
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);

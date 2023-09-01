@@ -24,7 +24,7 @@ class ImageController extends AbstractController
         $this->em = $em;
     }
 
-    #[Route('/trick/{slug}/image/delete/{id}', name: 'trick_image_remove')]
+    #[Route('/trick/{slug}/image/delete/{id}', name: 'trick_image_remove', methods: ['GET'])]
     public function remove($slug, $id): Response
     {
         $image = $this->imageRepository->find($id);
@@ -42,7 +42,7 @@ class ImageController extends AbstractController
         return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
     }
 
-    #[Route('/trick/{slug}/image/update/{id}', name: 'trick_image_update', methods: 'POST')]
+    #[Route('/trick/{slug}/image/update/{id}', name: 'trick_image_update', methods: ['POST'])]
     public function update($slug, $id, Request $request)
     {
         $image = $this->imageRepository->find($id);

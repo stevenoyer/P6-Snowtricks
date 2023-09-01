@@ -42,7 +42,7 @@ class SecurityController extends AbstractController
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
-    #[Route(path: '/login', name: 'security_login')]
+    #[Route(path: '/login', name: 'security_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $factory): Response
     {
         if ($this->getUser()) {
@@ -64,7 +64,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/registration/validate/{token}', name: 'security_registration_validation')]
+    #[Route('/registration/validate/{token}', name: 'security_registration_validation', methods: ['GET'])]
     public function validate($token)
     {
         $user = $this->userRepository->findOneBy(['token_validation' => $token]);
@@ -83,7 +83,7 @@ class SecurityController extends AbstractController
         return $this->redirectToRoute('security_login');
     }
 
-    #[Route('/registration', name: 'security_register')]
+    #[Route('/registration', name: 'security_register', methods: ['GET', 'POST'])]
     public function register(Request $request): Response
     {
         if ($this->getUser()) {
@@ -132,7 +132,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/forgot_password', name: 'security_forgot_password')]
+    #[Route('/forgot_password', name: 'security_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPassword(Request $request): Response
     {
         $form = $this->createForm(ForgotPasswordType::class, $this->getUser());
@@ -167,7 +167,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route('/reset_password/{token}', name: 'security_reset_password')]
+    #[Route('/reset_password/{token}', name: 'security_reset_password', methods: ['POST', 'GET'])]
     public function resetPassword($token, Request $request): Response
     {
         $user = $this->userRepository->findOneBy(['token_validation' => $token]);
@@ -209,7 +209,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/logout', name: 'security_logout')]
+    #[Route(path: '/logout', name: 'security_logout', methods: ['GET'])]
     public function logout(): void
     {
     }
