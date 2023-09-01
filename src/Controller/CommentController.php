@@ -29,14 +29,12 @@ class CommentController extends AbstractController
     public function create($slug, Request $request): Response
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
-        if (!$trick) 
-        {
+        if (!$trick) {
             $this->addFlash('danger', 'The trick does not exist !');
             return $this->redirectToRoute('home');
         }
 
-        if (!$this->getUser()) 
-        {
+        if (!$this->getUser()) {
             $this->addFlash('danger', 'You must be authenticated to perform this action.');
             return $this->redirectToRoute('security_login');
         }
@@ -59,27 +57,23 @@ class CommentController extends AbstractController
     public function delete($slug, $id): Response
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
-        if (!$trick) 
-        {
+        if (!$trick) {
             $this->addFlash('danger', 'The trick does not exist !');
             return $this->redirectToRoute('home');
         }
 
-        if (!$this->getUser()) 
-        {
+        if (!$this->getUser()) {
             $this->addFlash('danger', 'You must be authenticated to perform this action.');
             return $this->redirectToRoute('security_login');
         }
-        
+
         $comment = $this->commentRepository->find($id);
-        if (!$comment) 
-        {
+        if (!$comment) {
             $this->addFlash('danger', 'The comment does not exist !');
             return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
         }
 
-        if ($comment->getAuthor() !== $this->getUser())
-        {
+        if ($comment->getAuthor() !== $this->getUser()) {
             $this->addFlash('danger', 'You are not the author of this comment.');
             return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
         }
@@ -91,7 +85,7 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
     }
 
-    #[Route('/tricks/details/{id}/comments/load/{start}', name: 'load_comments', requirements:["start" => "\d+"])]
+    #[Route('/tricks/details/{id}/comments/load/{start}', name: 'load_comments', requirements: ["start" => "\d+"])]
     public function loadMore($id, $start = 10)
     {
         $comments = $this->commentRepository->findBy(['trick' => $id], ['createdAt' => 'DESC'], 10, $start);

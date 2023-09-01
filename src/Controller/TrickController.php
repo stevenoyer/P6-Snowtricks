@@ -35,11 +35,11 @@ class TrickController extends AbstractController
         $this->trickRepository = $trickRepository;
     }
 
-    #[Route('/tricks/load/{start}', name: 'tricks_load', requirements:["start" => "\d+"])]
+    #[Route('/tricks/load/{start}', name: 'tricks_load', requirements: ["start" => "\d+"])]
     public function load($start = 9)
     {
         $items = $this->trickRepository->findBy([], ['createdAt' => 'DESC'], 9, $start);
-        
+
         return $this->render('trick/load.html.twig', [
             'items' => $items
         ]);
@@ -50,43 +50,38 @@ class TrickController extends AbstractController
     {
         $trick = new Trick;
         $form = $this->createForm(TrickFormType::class, $trick);
-        
+
         $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid())
-        {   
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $trick->setSlug(strtolower($this->slugger->slug($trick->getTitle())));
             $trick->setCreatedAt(new DateTimeImmutable('now'));
             $trick->setUpdateAt(new DateTimeImmutable('now'));
 
             $mainPicture = $form->get('mainPicture')->getData();
-            if (!empty($mainPicture))
-            {
+            if (!empty($mainPicture)) {
                 $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
             }
 
             /* If there is no main picture, set the default main picture */
-            if (empty($mainPicture))
-            {
+            if (empty($mainPicture)) {
                 $trick->setMainPicture('snowtricks_header.jpeg');
             }
 
             /** @var \App\Entity\User */
             $user = $this->getUser();
             $trick->setAuthor($user);
-            
+
             $images = $form->getExtraData()['images'];
-            if (!empty($images))
-            {
+            if (!empty($images)) {
                 $imageManagement->process($images, $trick);
             }
 
             $videos = $form->getExtraData()['videos'];
-            if (!empty($videos))
-            {
+            if (!empty($videos)) {
                 $videoManagement->process($videos, $trick);
             }
-            
+
             $this->addFlash('success', 'The trick has been successfully created.');
             $this->em->persist($trick);
             $this->em->flush();
@@ -106,8 +101,7 @@ class TrickController extends AbstractController
             'slug' => $slug
         ]);
 
-        if (!$trick)
-        {
+        if (!$trick) {
             return throw $this->createNotFoundException('The page you requested does not exist or no longer exists.');
         }
 
@@ -126,8 +120,7 @@ class TrickController extends AbstractController
             'slug' => $slug
         ]);
 
-        if (!$trick)
-        {
+        if (!$trick) {
             return throw $this->createNotFoundException('The page you requested does not exist or no longer exists.');
         }
 
@@ -135,26 +128,22 @@ class TrickController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $trick->setSlug(strtolower($this->slugger->slug($trick->getTitle())));
             $trick->setUpdateAt(new DateTimeImmutable('now'));
 
             $mainPicture = $form->get('mainPicture')->getData();
-            if (!empty($mainPicture))
-            {
+            if (!empty($mainPicture)) {
                 $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
             }
 
             $images = $form->getExtraData()['images'];
-            if (!empty($images))
-            {
+            if (!empty($images)) {
                 $imageManagement->process($images, $trick);
             }
 
             $videos = $form->getExtraData()['videos'];
-            if (!empty($videos))
-            {
+            if (!empty($videos)) {
                 $videoManagement->process($videos, $trick);
             }
 
@@ -176,8 +165,7 @@ class TrickController extends AbstractController
     {
         $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
 
-        if ($trick)
-        {
+        if ($trick) {
             $this->addFlash('success', 'The trick has been successfully deleted.');
             $this->em->remove($trick);
             $this->em->flush();
@@ -185,5 +173,4 @@ class TrickController extends AbstractController
 
         return $this->redirectToRoute('home');
     }
-    
 }

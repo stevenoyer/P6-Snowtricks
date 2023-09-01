@@ -34,8 +34,7 @@ class ForgotPasswordType extends AbstractType
                         'message' => 'This email address is invalid.'
                     ])
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

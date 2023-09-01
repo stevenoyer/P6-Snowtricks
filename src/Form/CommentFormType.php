@@ -18,8 +18,7 @@ class CommentFormType extends AbstractType
                     'placeholder' => 'Comment the trick',
                     'class' => 'uk-textarea'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -7,7 +7,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 
-class UserNotification 
+class UserNotification
 {
     private $mailer;
 
@@ -27,5 +27,4 @@ class UserNotification
 
         $this->mailer->send($mail);
     }
-
 }

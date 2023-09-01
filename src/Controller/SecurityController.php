@@ -45,13 +45,12 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'security_login')]
     public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $factory): Response
     {
-        if ($this->getUser()) 
-        {
+        if ($this->getUser()) {
             return $this->redirectToRoute('user_profile');
         }
 
         $form = $factory->createNamed('', LoginFormType::class);
-        
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -70,8 +69,7 @@ class SecurityController extends AbstractController
     {
         $user = $this->userRepository->findOneBy(['token_validation' => $token]);
 
-        if (!$user)
-        {
+        if (!$user) {
             $this->addFlash('danger', 'No users found.');
             return $this->redirectToRoute('security_login');
         }
@@ -88,8 +86,7 @@ class SecurityController extends AbstractController
     #[Route('/registration', name: 'security_register')]
     public function register(Request $request): Response
     {
-        if ($this->getUser()) 
-        {
+        if ($this->getUser()) {
             return $this->redirectToRoute('user_profile');
         }
 
@@ -109,7 +106,7 @@ class SecurityController extends AbstractController
             $user->setCreatedAt(new DateTime('now'));
             $user->setAvatar('user_profile.png');
 
-            $token = sha1(uniqid().uniqid());
+            $token = sha1(uniqid() . uniqid());
             $user->setTokenValidation($token);
 
             $this->em->persist($user);
@@ -124,7 +121,7 @@ class SecurityController extends AbstractController
                 'Validating your SnowTricks account',
                 'To validate your account, click on the following link: <a href="' . $url . '">' . $url . '</a>'
             );
-            
+
             $this->addFlash('success', 'Your account has been created. We have just sent you a confirmation email with a link to validate it.');
 
             return $this->redirectToRoute('security_login');
@@ -141,8 +138,7 @@ class SecurityController extends AbstractController
         $form = $this->createForm(ForgotPasswordType::class, $this->getUser());
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->userRepository->findOneBy(['email' => $form->get('email')->getData()]);
             $token = $this->tokenGenerator->generate($user->getEmail());
 
@@ -156,10 +152,10 @@ class SecurityController extends AbstractController
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
             $this->userNotification->send(
-                $user, 
+                $user,
                 'Reset your SnowTricks account password',
-                '<p>To reset your password, click on the following link: <a href="' . $url . '">' . $url . '</a></p>' . 
-                '<p>This link expires in : ' . date('d-m-Y H:i', $user->getTokenExpiration()) . '</p>'
+                '<p>To reset your password, click on the following link: <a href="' . $url . '">' . $url . '</a></p>' .
+                    '<p>This link expires in : ' . date('d-m-Y H:i', $user->getTokenExpiration()) . '</p>'
             );
 
             $this->addFlash('success', 'An e-mail has just been sent to you to reset your password.');
@@ -175,15 +171,13 @@ class SecurityController extends AbstractController
     public function resetPassword($token, Request $request): Response
     {
         $user = $this->userRepository->findOneBy(['token_validation' => $token]);
-        
-        if (!$user)
-        {
+
+        if (!$user) {
             $this->addFlash('danger', 'This token is invalid.');
             return $this->redirectToRoute('security_forgot_password');
         }
 
-        if ($user->getTokenExpiration() < time())
-        {
+        if ($user->getTokenExpiration() < time()) {
             $this->addFlash('danger', 'The token has expired. You need to request a new password reset.');
             return $this->redirectToRoute('security_forgot_password');
         }
@@ -192,8 +186,7 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             // encode the password
             $user->setPassword(
                 $this->userPasswordHasher->hashPassword(
@@ -210,7 +203,7 @@ class SecurityController extends AbstractController
             $this->addFlash('success', 'Your password has been changed!');
             return $this->redirectToRoute('security_login');
         }
-        
+
         return $this->render('security/reset.html.twig', [
             'resetForm' => $form->createView()
         ]);

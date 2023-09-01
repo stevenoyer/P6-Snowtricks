@@ -28,14 +28,13 @@ class ImageController extends AbstractController
     public function remove($slug, $id): Response
     {
         $image = $this->imageRepository->find($id);
-        if (!$image) 
-        {
+        if (!$image) {
             $this->addFlash('danger', 'No image found for delete.');
             return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
         }
 
         $this->fileDeleter->delete($image->getName());
-        
+
         $this->em->remove($image);
         $this->em->flush();
 
@@ -47,16 +46,14 @@ class ImageController extends AbstractController
     public function update($slug, $id, Request $request)
     {
         $image = $this->imageRepository->find($id);
-        if (!$image) 
-        {
+        if (!$image) {
             $this->addFlash('danger', 'No image found for update.');
             return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
         }
 
         $image_alt = $request->request->get('image_alt');
 
-        if (empty($image_alt)) 
-        {
+        if (empty($image_alt)) {
             $this->addFlash('danger', 'Alternative text is empty.');
             return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
         }
@@ -69,6 +66,5 @@ class ImageController extends AbstractController
         return $this->redirectToRoute('trick_edit', [
             'slug' => $slug
         ]);
-
     }
 }

@@ -12,19 +12,13 @@ class CategoryController extends AbstractController
     public function index(): Response
     {
         // To do
-        return $this->render('category/create.html.twig', [
-            
-        ]);
+        return $this->render('category/create.html.twig', []);
     }
 
     #[Route('/group/edit/{slug}', name: 'category_edit')]
     public function edit($slug): Response
     {
         // To do
-        return $this->render('category/edit.html.twig', [
-            
-        ]);
+        return $this->render('category/edit.html.twig', []);
     }
-
-    
 }

@@ -24,12 +24,11 @@ class VideoController extends AbstractController
     public function remove($slug, $id): Response
     {
         $video = $this->videoRepository->find($id);
-        if (!$video) 
-        {
+        if (!$video) {
             $this->addFlash('danger', 'No video found for delete.');
             return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
         }
-        
+
         $this->addFlash('success', 'Video has been successfully deleted.');
         $this->em->remove($video);
         $this->em->flush();

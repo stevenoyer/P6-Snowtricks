@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -10,10 +10,9 @@ class PictureUploader extends FileUploader
     public function process(array $images)
     {
         $filenames = [];
-        foreach ($images as $image)
-        {
+        foreach ($images as $image) {
             if (empty($image['file'])) continue;
-            
+
             $filenames[] = [
                 'filename' => $this->upload($image['file']),
                 'alt' => $image['alt']
@@ -22,5 +21,4 @@ class PictureUploader extends FileUploader
 
         return $filenames;
     }
-
 }

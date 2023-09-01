@@ -86,8 +86,7 @@ class TrickFormType extends AbstractType
                 'placeholder' => '-- Choose category --',
                 'class' => Category::class,
                 'choice_label' => 'name'
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -29,12 +29,10 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())
-        {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile */
             $file = $form->get('avatar')->getData();
-            if ($file)
-            {
+            if ($file) {
                 $filename = $fileUploader->upload($file);
                 $user->setAvatar($filename);
             }
@@ -44,10 +42,9 @@ class UserController extends AbstractController
             $this->addFlash('success', 'Votre profil a bien été modifié !');
             return $this->redirectToRoute('user_profile');
         }
-        
+
         return $this->render('user/edit.html.twig', [
             'formView' => $form->createView()
         ]);
     }
-
 }

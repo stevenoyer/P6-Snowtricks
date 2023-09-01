@@ -22,16 +22,14 @@ class ImageManagement extends MediaManagement
     public function process(array $media, Trick $trick)
     {
         $files = $this->pictureUploader->process($media);
-                
-        foreach ($files as $file)
-        {
+
+        foreach ($files as $file) {
             $image = new Image;
             $image->setName($file['filename']);
             $image->setAlt($file['alt']);
             $image->setTrick($trick);
-            
+
             $this->em->persist($image);
         }
     }
-
 }

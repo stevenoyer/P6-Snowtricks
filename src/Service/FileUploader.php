@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -25,12 +25,9 @@ class FileUploader
         $safeFilename = $this->slugger->slug($originalFilename, '_');
         $filename = uniqid() . '_' . $safeFilename . '.' . $file->guessExtension();
 
-        try 
-        {
+        try {
             $file->move($this->getTargetDirectory(), $filename);
-        } 
-        catch (FileException $e) 
-        {
+        } catch (FileException $e) {
             throw $e;
         }
 

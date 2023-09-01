@@ -73,19 +73,17 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
-        ;
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
-            
+
             /**
              * @var User
              */
             $user = $event->getData();
 
-            if ($user->getId() !== null)
-            {
+            if ($user->getId() !== null) {
                 $form->add('avatar', FileType::class, [
                     'required' => false,
                     'mapped' => false,
@@ -107,7 +105,6 @@ class RegistrationFormType extends AbstractType
 
                 $form->remove('password');
             }
-
         });
     }
 

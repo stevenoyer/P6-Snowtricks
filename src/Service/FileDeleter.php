@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -15,12 +15,10 @@ class FileDeleter
     {
         $file = $this->picturesDirectory . $filename;
 
-        if (file_exists($file))
-        {
+        if (file_exists($file)) {
             unlink($file);
         }
 
         return false;
     }
-
 }

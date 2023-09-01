@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Media;
 
@@ -19,8 +19,7 @@ class VideoManagement extends MediaManagement
 
     public function process(array $media, Trick $trick)
     {
-        foreach ($media as $video)
-        {
+        foreach ($media as $video) {
             $videoEntity = new Video;
             $videoEntity->setUrl($video);
             $videoEntity->setTrick($trick);
@@ -28,5 +27,4 @@ class VideoManagement extends MediaManagement
             $this->em->persist($videoEntity);
         }
     }
-
 }
