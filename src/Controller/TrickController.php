@@ -2,22 +2,24 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Video;
-use App\Form\CommentFormType;
+use DateTimeImmutable;
 use App\Form\TrickFormType;
+use App\Form\CommentFormType;
+use App\Service\TrickService;
 use App\Media\ImageManagement;
 use App\Media\VideoManagement;
-use App\Repository\TrickRepository;
 use App\Service\PictureUploader;
-use DateTimeImmutable;
+use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TrickController extends AbstractController
 {
@@ -26,13 +28,15 @@ class TrickController extends AbstractController
     protected $em;
     protected $slugger;
     protected $trickRepository;
+    protected $trickService;
 
-    public function __construct(PictureUploader $pictureUploader, EntityManagerInterface $em, SluggerInterface $slugger, TrickRepository $trickRepository)
+    public function __construct(PictureUploader $pictureUploader, EntityManagerInterface $em, SluggerInterface $slugger, TrickRepository $trickRepository, TrickService $trickService)
     {
         $this->pictureUploader = $pictureUploader;
         $this->em = $em;
         $this->slugger = $slugger;
         $this->trickRepository = $trickRepository;
+        $this->trickService = $trickService;
     }
 
     /**
@@ -60,42 +64,11 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setSlug(strtolower($this->slugger->slug($trick->getTitle())));
-            $trick->setCreatedAt(new DateTimeImmutable('now'));
-            $trick->setUpdateAt(new DateTimeImmutable('now'));
 
-            // Main image processing via a service
-            $mainPicture = $form->get('mainPicture')->getData();
-            if (!empty($mainPicture)) {
-                $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
-            }
+            $create = $this->trickService->createTrick($trick, $form, $this->getUser());
 
-            /* If there is no main picture, set the default main picture */
-            if (empty($mainPicture)) {
-                $trick->setMainPicture('snowtricks_header.jpeg');
-            }
-
-            /** @var \App\Entity\User */
-            $user = $this->getUser();
-            $trick->setAuthor($user);
-
-            // Processing images via a service
-            $images = $form->getExtraData()['images'];
-            if (!empty($images)) {
-                $imageManagement->process($images, $trick);
-            }
-
-            // Processing videos via a service
-            $videos = $form->getExtraData()['videos'];
-            if (!empty($videos)) {
-                $videoManagement->process($videos, $trick);
-            }
-
-            $this->addFlash('success', 'The trick has been successfully created.');
-            $this->em->persist($trick);
-            $this->em->flush();
-
-            return $this->redirectToRoute('home');
+            $this->addFlash($create['type'], $create['message']);
+            return $this->redirectToRoute($create['redirectRoute'], $create['paramsRoute']);
         }
 
         return $this->render('trick/create.html.twig', [
@@ -128,32 +101,11 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setSlug(strtolower($this->slugger->slug($trick->getTitle())));
-            $trick->setUpdateAt(new DateTimeImmutable('now'));
 
-            // Main image processing via a service
-            $mainPicture = $form->get('mainPicture')->getData();
-            if (!empty($mainPicture)) {
-                $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
-            }
+            $update = $this->trickService->editTrick($trick, $form, $this->getUser());
 
-            // Processing images via a service
-            $images = $form->getExtraData()['images'];
-            if (!empty($images)) {
-                $imageManagement->process($images, $trick);
-            }
-
-            // Processing videos via a service
-            $videos = $form->getExtraData()['videos'];
-            if (!empty($videos)) {
-                $videoManagement->process($videos, $trick);
-            }
-
-            $this->addFlash('success', 'The trick has been successfully updated.');
-            $this->em->persist($trick);
-            $this->em->flush();
-
-            return $this->redirectToRoute('home');
+            $this->addFlash($update['type'], $update['message']);
+            return $this->redirectToRoute($update['redirectRoute'], $update['paramsRoute']);
         }
 
         return $this->render('trick/edit.html.twig', [
@@ -168,10 +120,9 @@ class TrickController extends AbstractController
     #[Route('/tricks/delete/{slug}', name: 'trick_delete', methods: ['GET'])]
     public function delete(Trick $trick): Response
     {
-        $this->addFlash('success', 'The trick has been successfully deleted.');
-        $this->em->remove($trick);
-        $this->em->flush();
+        $delete = $this->trickService->deleteTrick($trick);
 
-        return $this->redirectToRoute('home');
+        $this->addFlash($delete['type'], $delete['message']);
+        return $this->redirectToRoute($delete['redirectRoute'], $delete['paramsRoute']);
     }
 }

@@ -8,38 +8,24 @@ use App\Form\LoginFormType;
 use App\Form\RegistrationFormType;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
-use App\Service\TokenGenerator;
-use App\Service\UserNotification;
-use DateInterval;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\SecurityService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SecurityController extends AbstractController
 {
 
-    private $urlGenerator;
-    private $em;
     private $userRepository;
-    private $tokenGenerator;
-    private $userNotification;
-    private $userPasswordHasher;
+    private $securityService;
 
-    public function __construct(UrlGeneratorInterface $urlGeneratorInterface, EntityManagerInterface $em, UserRepository $userRepository, TokenGenerator $tokenGenerator, UserNotification $userNotification, UserPasswordHasherInterface $userPasswordHasher)
+    public function __construct(UserRepository $userRepository, SecurityService $securityService)
     {
-        $this->urlGenerator = $urlGeneratorInterface;
-        $this->em = $em;
         $this->userRepository = $userRepository;
-        $this->tokenGenerator = $tokenGenerator;
-        $this->userNotification = $userNotification;
-        $this->userPasswordHasher = $userPasswordHasher;
+        $this->securityService = $securityService;
     }
 
     /**
@@ -73,20 +59,10 @@ class SecurityController extends AbstractController
     #[Route('/registration/validate/{token}', name: 'security_registration_validation', methods: ['GET'])]
     public function validate($token)
     {
-        $user = $this->userRepository->findOneBy(['token_validation' => $token]);
+        $validate = $this->securityService->validateAccount($token);
 
-        if (!$user) {
-            $this->addFlash('danger', 'No users found.');
-            return $this->redirectToRoute('security_login');
-        }
-
-        $user->setTokenValidation(null);
-        $user->setValidate(true);
-
-        $this->em->flush();
-
-        $this->addFlash('success', 'Your account has been validated. You can now log in.');
-        return $this->redirectToRoute('security_login');
+        $this->addFlash($validate['type'], $validate['message']);
+        return $this->redirectToRoute($validate['redirectRoute'], $validate['paramsRoute']);
     }
 
     /**
@@ -104,38 +80,10 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the password
-            $user->setPassword(
-                $this->userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
-            $user->setValidate(false);
-            $user->setCreatedAt(new DateTime('now'));
-            $user->setAvatar('user_profile.png');
+            $register = $this->securityService->registerUser($user, $form);
 
-            $token = sha1(uniqid() . uniqid());
-            $user->setTokenValidation($token);
-
-            $this->em->persist($user);
-            $this->em->flush();
-
-            // Generate an account validation link
-            $url = $this->urlGenerator->generate('security_registration_validation', [
-                'token' => $user->getTokenValidation()
-            ], UrlGeneratorInterface::ABSOLUTE_URL);
-
-            // Calls the UserNotification service to send the account validation email
-            $this->userNotification->send(
-                $user,
-                'Validating your SnowTricks account',
-                'To validate your account, click on the following link: <a href="' . $url . '">' . $url . '</a>'
-            );
-
-            $this->addFlash('success', 'Your account has been created. We have just sent you a confirmation email with a link to validate it.');
-
-            return $this->redirectToRoute('security_login');
+            $this->addFlash($register['type'], $register['message']);
+            return $this->redirectToRoute($register['redirectRoute'], $register['paramsRoute']);
         }
 
         return $this->render('security/register.html.twig', [
@@ -153,30 +101,10 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->userRepository->findOneBy(['email' => $form->get('email')->getData()]);
-            $token = $this->tokenGenerator->generate($user->getEmail());
+            $forgot = $this->securityService->forgotPassword($form);
 
-            // Generate token and token expiry and insert into entity
-            $user->setTokenExpiration($this->tokenGenerator->getExpiration());
-            $user->setTokenValidation($token);
-
-            $this->em->flush();
-
-            // Generate forgot password link
-            $url = $this->urlGenerator->generate('security_reset_password', [
-                'token' => $user->getTokenValidation()
-            ], UrlGeneratorInterface::ABSOLUTE_URL);
-
-            // Calls the UserNotification service to send the forgot password email
-            $this->userNotification->send(
-                $user,
-                'Reset your SnowTricks account password',
-                '<p>To reset your password, click on the following link: <a href="' . $url . '">' . $url . '</a></p>' .
-                    '<p>This link expires in : ' . date('d-m-Y H:i', $user->getTokenExpiration()) . '</p>'
-            );
-
-            $this->addFlash('success', 'An e-mail has just been sent to you to reset your password.');
-            return $this->redirectToRoute('home');
+            $this->addFlash($forgot['type'], $forgot['message']);
+            return $this->redirectToRoute($forgot['redirectRoute'], $forgot['paramsRoute']);
         }
 
         return $this->render('security/forgot_password.html.twig', [
@@ -207,23 +135,10 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $reset = $this->securityService->resetPassword($user, $form);
 
-            // encode the password
-            $user->setPassword(
-                $this->userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
-
-            // Reset values to null
-            $user->setTokenValidation(null);
-            $user->setTokenExpiration(null);
-
-            $this->em->flush();
-
-            $this->addFlash('success', 'Your password has been changed!');
-            return $this->redirectToRoute('security_login');
+            $this->addFlash($reset['type'], $reset['message']);
+            return $this->redirectToRoute($reset['redirectRoute'], $reset['paramsRoute']);
         }
 
         return $this->render('security/reset.html.twig', [

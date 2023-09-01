@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Trick;
 use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
+use App\Service\CommentService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,47 +16,25 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CommentController extends AbstractController
 {
-    private $em;
-    private $trickRepository;
     private $commentRepository;
+    private $commentService;
 
-    public function __construct(EntityManagerInterface $em, TrickRepository $trickRepository, CommentRepository $commentRepository)
+    public function __construct(CommentRepository $commentRepository, CommentService $commentService)
     {
-        $this->em = $em;
-        $this->trickRepository = $trickRepository;
         $this->commentRepository = $commentRepository;
+        $this->commentService = $commentService;
     }
 
     /**
      * Create comment
      */
     #[Route('/tricks/details/{slug}/comment', name: 'add_comment', methods: ['POST'])]
-    public function create($slug, Request $request): Response
+    public function create(Trick $trick, Request $request): Response
     {
-        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
-        if (!$trick) {
-            $this->addFlash('danger', 'The trick does not exist !');
-            return $this->redirectToRoute('home');
-        }
+        $create = $this->commentService->createComment($trick, $request, $this->getUser());
 
-        if (!$this->getUser()) {
-            $this->addFlash('danger', 'You must be authenticated to perform this action.');
-            return $this->redirectToRoute('security_login');
-        }
-
-        // Create new comment
-        $comment = new Comment;
-        $comment->setTrick($trick);
-        $comment->setContent($request->request->get('comment_form')['content']);
-        $comment->setAuthor($this->getUser());
-        $comment->setCreatedAt(new DateTimeImmutable('now'));
-        $comment->setUpdateAt(new DateTimeImmutable('now'));
-
-        $this->em->persist($comment);
-        $this->em->flush();
-
-        $this->addFlash('success', 'Your comment has been published.');
-        return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
+        $this->addFlash($create['type'], $create['message']);
+        return $this->redirectToRoute($create['redirectRoute'], $create['paramsRoute']);
     }
 
     /**
@@ -63,33 +43,10 @@ class CommentController extends AbstractController
     #[Route('/tricks/details/{slug}/comment/{id}/delete', name: 'delete_comment', methods: ['GET'])]
     public function delete($slug, $id): Response
     {
-        $trick = $this->trickRepository->findOneBy(['slug' => $slug]);
-        if (!$trick) {
-            $this->addFlash('danger', 'The trick does not exist !');
-            return $this->redirectToRoute('home');
-        }
+        $delete = $this->commentService->deleteComment($slug, $id, $this->getUser());
 
-        if (!$this->getUser()) {
-            $this->addFlash('danger', 'You must be authenticated to perform this action.');
-            return $this->redirectToRoute('security_login');
-        }
-
-        $comment = $this->commentRepository->find($id);
-        if (!$comment) {
-            $this->addFlash('danger', 'The comment does not exist !');
-            return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
-        }
-
-        if ($comment->getAuthor() !== $this->getUser()) {
-            $this->addFlash('danger', 'You are not the author of this comment.');
-            return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
-        }
-
-        $this->em->remove($comment);
-        $this->em->flush();
-
-        $this->addFlash('success', 'Your comment has been deleted.');
-        return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
+        $this->addFlash($delete['type'], $delete['message']);
+        return $this->redirectToRoute($delete['redirectRoute'], $delete['paramsRoute']);
     }
 
     /**
