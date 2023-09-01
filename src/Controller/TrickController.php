@@ -35,6 +35,9 @@ class TrickController extends AbstractController
         $this->trickRepository = $trickRepository;
     }
 
+    /**
+     * Load more tricks
+     */
     #[Route('/tricks/load/{start}', name: 'tricks_load', requirements: ["start" => "\d+"], methods: ['GET'])]
     public function load($start = 9)
     {
@@ -45,6 +48,9 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Create trick
+     */
     #[Route('/tricks/create', name: 'trick_create', methods: ['GET', 'POST'])]
     public function create(Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
     {
@@ -58,6 +64,7 @@ class TrickController extends AbstractController
             $trick->setCreatedAt(new DateTimeImmutable('now'));
             $trick->setUpdateAt(new DateTimeImmutable('now'));
 
+            // Main image processing via a service
             $mainPicture = $form->get('mainPicture')->getData();
             if (!empty($mainPicture)) {
                 $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
@@ -72,11 +79,13 @@ class TrickController extends AbstractController
             $user = $this->getUser();
             $trick->setAuthor($user);
 
+            // Processing images via a service
             $images = $form->getExtraData()['images'];
             if (!empty($images)) {
                 $imageManagement->process($images, $trick);
             }
 
+            // Processing videos via a service
             $videos = $form->getExtraData()['videos'];
             if (!empty($videos)) {
                 $videoManagement->process($videos, $trick);
@@ -94,6 +103,9 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Show a trick
+     */
     #[Route('/tricks/details/{slug}', name: 'trick_show', methods: ['GET'])]
     public function show(Trick $trick): Response
     {
@@ -105,6 +117,9 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Edit a trick
+     */
     #[Route('/tricks/edit/{slug}', name: 'trick_edit', methods: ['GET', 'POST'])]
     public function edit(Trick $trick, Request $request, ImageManagement $imageManagement, VideoManagement $videoManagement): Response
     {
@@ -116,16 +131,19 @@ class TrickController extends AbstractController
             $trick->setSlug(strtolower($this->slugger->slug($trick->getTitle())));
             $trick->setUpdateAt(new DateTimeImmutable('now'));
 
+            // Main image processing via a service
             $mainPicture = $form->get('mainPicture')->getData();
             if (!empty($mainPicture)) {
                 $trick->setMainPicture($this->pictureUploader->upload($mainPicture));
             }
 
+            // Processing images via a service
             $images = $form->getExtraData()['images'];
             if (!empty($images)) {
                 $imageManagement->process($images, $trick);
             }
 
+            // Processing videos via a service
             $videos = $form->getExtraData()['videos'];
             if (!empty($videos)) {
                 $videoManagement->process($videos, $trick);
@@ -144,6 +162,9 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * Delete a trick
+     */
     #[Route('/tricks/delete/{slug}', name: 'trick_delete', methods: ['GET'])]
     public function delete(Trick $trick): Response
     {

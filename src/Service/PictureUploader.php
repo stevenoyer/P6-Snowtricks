@@ -7,6 +7,9 @@ use App\Service\FileUploader;
 class PictureUploader extends FileUploader
 {
 
+    /**
+     * This function returns a table with the name of the images and their alternative text
+     */
     public function process(array $images)
     {
         $filenames = [];

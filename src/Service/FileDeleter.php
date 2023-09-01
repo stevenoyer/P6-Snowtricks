@@ -11,6 +11,9 @@ class FileDeleter
         $this->picturesDirectory = $picturesDirectory;
     }
 
+    /**
+     * This function can be used to delete a file by name
+     */
     public function delete($filename)
     {
         $file = $this->picturesDirectory . $filename;

@@ -25,6 +25,9 @@ class CommentController extends AbstractController
         $this->commentRepository = $commentRepository;
     }
 
+    /**
+     * Create comment
+     */
     #[Route('/tricks/details/{slug}/comment', name: 'add_comment', methods: ['POST'])]
     public function create($slug, Request $request): Response
     {
@@ -39,6 +42,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('security_login');
         }
 
+        // Create new comment
         $comment = new Comment;
         $comment->setTrick($trick);
         $comment->setContent($request->request->get('comment_form')['content']);
@@ -53,6 +57,9 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
     }
 
+    /**
+     * Delete comment
+     */
     #[Route('/tricks/details/{slug}/comment/{id}/delete', name: 'delete_comment', methods: ['GET'])]
     public function delete($slug, $id): Response
     {
@@ -85,6 +92,9 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('trick_show', ['slug' => $trick->getSlug()]);
     }
 
+    /**
+     * Load more comment
+     */
     #[Route('/tricks/details/{id}/comments/load/{start}', name: 'load_comments', requirements: ["start" => "\d+"], methods: ['GET'])]
     public function loadMore($id, $start = 10)
     {

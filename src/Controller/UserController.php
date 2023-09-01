@@ -14,12 +14,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
+    /**
+     * Show profile
+     */
     #[Route('/profile', name: 'user_profile')]
     public function show(): Response
     {
         return $this->render('user/show.html.twig');
     }
 
+    /**
+     * Edit a user
+     */
     #[Route('/profile/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EntityManagerInterface $em, FileUploader $fileUploader): Response
     {
@@ -33,6 +39,7 @@ class UserController extends AbstractController
             /** @var UploadedFile */
             $file = $form->get('avatar')->getData();
             if ($file) {
+                // Processing the avatar via a service
                 $filename = $fileUploader->upload($file);
                 $user->setAvatar($filename);
             }

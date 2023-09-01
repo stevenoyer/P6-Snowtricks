@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
+    /**
+     * Show home page
+     */
     #[Route('/', name: 'home', methods: ['GET'])]
     public function index(TrickRepository $trickRepository): Response
     {

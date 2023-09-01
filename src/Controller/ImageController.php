@@ -24,6 +24,9 @@ class ImageController extends AbstractController
         $this->em = $em;
     }
 
+    /**
+     * Delete a image
+     */
     #[Route('/trick/{slug}/image/delete/{id}', name: 'trick_image_remove', methods: ['GET'])]
     public function remove($slug, $id): Response
     {
@@ -33,6 +36,7 @@ class ImageController extends AbstractController
             return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
         }
 
+        // Calls the fileDeleter service to delete the image
         $this->fileDeleter->delete($image->getName());
 
         $this->em->remove($image);
@@ -42,6 +46,9 @@ class ImageController extends AbstractController
         return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
     }
 
+    /**
+     * Updating the alternative text image
+     */
     #[Route('/trick/{slug}/image/update/{id}', name: 'trick_image_update', methods: ['POST'])]
     public function update($slug, $id, Request $request)
     {
@@ -51,6 +58,7 @@ class ImageController extends AbstractController
             return $this->redirectToRoute('trick_edit', ['slug' => $slug]);
         }
 
+        // Get the new alternative text
         $image_alt = $request->request->get('image_alt');
 
         if (empty($image_alt)) {

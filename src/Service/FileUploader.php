@@ -17,6 +17,9 @@ class FileUploader
         $this->slugger = $slugger;
     }
 
+    /**
+     * This function lets you import files and save them. It makes file names unique.
+     */
     public function upload(UploadedFile $file): ?string
     {
         if (empty($file)) return false;

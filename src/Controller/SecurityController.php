@@ -42,6 +42,9 @@ class SecurityController extends AbstractController
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
+    /**
+     * Login page
+     */
     #[Route(path: '/login', name: 'security_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils, FormFactoryInterface $factory): Response
     {
@@ -64,6 +67,9 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Account validation
+     */
     #[Route('/registration/validate/{token}', name: 'security_registration_validation', methods: ['GET'])]
     public function validate($token)
     {
@@ -83,6 +89,9 @@ class SecurityController extends AbstractController
         return $this->redirectToRoute('security_login');
     }
 
+    /**
+     * Registration
+     */
     #[Route('/registration', name: 'security_register', methods: ['GET', 'POST'])]
     public function register(Request $request): Response
     {
@@ -112,10 +121,12 @@ class SecurityController extends AbstractController
             $this->em->persist($user);
             $this->em->flush();
 
+            // Generate an account validation link
             $url = $this->urlGenerator->generate('security_registration_validation', [
                 'token' => $user->getTokenValidation()
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
+            // Calls the UserNotification service to send the account validation email
             $this->userNotification->send(
                 $user,
                 'Validating your SnowTricks account',
@@ -132,6 +143,9 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Forgot password
+     */
     #[Route('/forgot_password', name: 'security_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPassword(Request $request): Response
     {
@@ -142,15 +156,18 @@ class SecurityController extends AbstractController
             $user = $this->userRepository->findOneBy(['email' => $form->get('email')->getData()]);
             $token = $this->tokenGenerator->generate($user->getEmail());
 
+            // Generate token and token expiry and insert into entity
             $user->setTokenExpiration($this->tokenGenerator->getExpiration());
             $user->setTokenValidation($token);
 
             $this->em->flush();
 
+            // Generate forgot password link
             $url = $this->urlGenerator->generate('security_reset_password', [
                 'token' => $user->getTokenValidation()
             ], UrlGeneratorInterface::ABSOLUTE_URL);
 
+            // Calls the UserNotification service to send the forgot password email
             $this->userNotification->send(
                 $user,
                 'Reset your SnowTricks account password',
@@ -167,6 +184,9 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Reset password
+     */
     #[Route('/reset_password/{token}', name: 'security_reset_password', methods: ['POST', 'GET'])]
     public function resetPassword($token, Request $request): Response
     {
@@ -187,6 +207,7 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             // encode the password
             $user->setPassword(
                 $this->userPasswordHasher->hashPassword(
@@ -195,6 +216,7 @@ class SecurityController extends AbstractController
                 )
             );
 
+            // Reset values to null
             $user->setTokenValidation(null);
             $user->setTokenExpiration(null);
 
@@ -209,6 +231,9 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * Logout
+     */
     #[Route(path: '/logout', name: 'security_logout', methods: ['GET'])]
     public function logout(): void
     {
