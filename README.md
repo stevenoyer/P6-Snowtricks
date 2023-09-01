@@ -22,7 +22,7 @@ php bin/console messenger:consume async -vv
 ```
 
 ## Env
-Pour le fichier .env il suffit de duppliquer le fichier .env.dist et d'y configurer le MAILER_DSN et l'accès à la base de données DATABASE_URL
+Pour créer le fichier .env, vous pouvez simplement copier le fichier .env.dist et ensuite y configurer les variables d'environnement MAILER_DSN ainsi que l'accès à la base de données en modifiant la valeur de DATABASE_URL.
 
 ## Base de données
-Un fichier .sql est joint dans ce projet afin que vous puissiez avoir un jeu de données. Si vous ne voulez pas importer directement cette base de données, vous pouvez inclure manuellement les données en récupérant les "INSERT INTO" de chaque table.
+Dans ce projet, un fichier .sql est inclus pour vous fournir un ensemble de données. Si vous préférez ne pas importer la base de données directement, vous avez également la possibilité d'inclure manuellement les données en extrayant les instructions "INSERT INTO" de chaque table.
